@@ -1,0 +1,3 @@
+C:/Users/lenovo/OneDrive/Desktop/project/Math/cmake-build-debug/CMakeFiles/Math.dir
+C:/Users/lenovo/OneDrive/Desktop/project/Math/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/lenovo/OneDrive/Desktop/project/Math/cmake-build-debug/CMakeFiles/rebuild_cache.dir
