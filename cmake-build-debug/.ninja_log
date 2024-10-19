@@ -1,3 +1,19 @@
 # ninja log v5
 4	352	7509523078220748	CMakeFiles/Math.dir/main.cpp.obj	18f93685bf14747b
-354	491	7509523079574193	Math.exe	c7d9bcff672c0d7
+1195	1295	7509555385783212	Math.exe	68297e493bf8fbe9
+5	1028	7509555383156360	CMakeFiles/Math.dir/src/main.cpp.obj	de3e010823af225c
+11	1194	7509555384822189	CMakeFiles/Math.dir/src/RenderWindow.cpp.obj	5e62cae508f8b020
+12	1233	7509563881435968	CMakeFiles/Math.dir/src/RenderWindow.cpp.obj	5e62cae508f8b020
+12	1055	7509564711188509	CMakeFiles/Math.dir/src/RenderWindow.cpp.obj	5e62cae508f8b020
+7	858	7509565611148567	CMakeFiles/Math.dir/src/main.cpp.obj	de3e010823af225c
+14	1025	7509565612819280	CMakeFiles/Math.dir/src/RenderWindow.cpp.obj	5e62cae508f8b020
+1028	1137	7509565613888661	Math.exe	68297e493bf8fbe9
+5	851	7509565819069653	CMakeFiles/Math.dir/src/main.cpp.obj	de3e010823af225c
+851	952	7509565820035565	Math.exe	68297e493bf8fbe9
+8	841	7509566301362119	CMakeFiles/Math.dir/src/main.cpp.obj	de3e010823af225c
+841	935	7509566302266232	Math.exe	68297e493bf8fbe9
+6	828	7509566382697298	CMakeFiles/Math.dir/src/main.cpp.obj	de3e010823af225c
+829	924	7509566383626625	Math.exe	68297e493bf8fbe9
+5	865	7509567771351484	CMakeFiles/Math.dir/src/main.cpp.obj	de3e010823af225c
+12	1021	7509567772931463	CMakeFiles/Math.dir/src/RenderWindow.cpp.obj	5e62cae508f8b020
+1021	1116	7509567773841556	Math.exe	68297e493bf8fbe9

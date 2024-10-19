@@ -29,7 +29,11 @@ link_directories(${SDL2_IMAGE_LIB_DIR})
 link_directories(${SDL2_TTF_LIB_DIR})
 
 # Add executable
-add_executable(Math src/main.cpp)
+add_executable(Math src/main.cpp
+        include/RenderWindow.h
+        src/RenderWindow.cpp
+        include/Color.h
+)
 
 # Link all the libraries
 target_link_libraries(Math SDL2main SDL2 SDL2_image SDL2_ttf)
