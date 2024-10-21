@@ -33,6 +33,13 @@ add_executable(Math src/main.cpp
         include/RenderWindow.h
         src/RenderWindow.cpp
         include/Color.h
+        include/Grid.h
+        include/Vec2D.h
+        include/Matrix.h
+        src/Grid.cpp
+        include/MouseHandler.h
+        src/inputs/MouseHandler.cpp
+        include/Utils.h
 )
 
 # Link all the libraries

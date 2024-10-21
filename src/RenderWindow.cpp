@@ -114,3 +114,12 @@ void RenderWindow::fillCircle(float x, float y, float r, Color color) {
 void RenderWindow::display() {
     SDL_RenderPresent(renderer);
 }
+
+float RenderWindow::getRefreshRate() {
+    float refreshRate = 0;
+    SDL_DisplayMode mode;
+    if (SDL_GetCurrentDisplayMode(0, &mode) == 0) {
+        refreshRate = mode.refresh_rate;
+    }
+    return refreshRate;
+}
