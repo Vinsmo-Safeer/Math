@@ -110,6 +110,40 @@ void RenderWindow::fillCircle(float x, float y, float r, Color color) {
     SDL_SetRenderDrawColor(renderer, defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a);
 }
 
+void RenderWindow::drawText(const char *text, int x, int y, int size, bool bold, Color color) {
+    TTF_Font* font = TTF_OpenFont("../assets/fonts/arial.ttf", size);
+    if (font == nullptr) {
+        std::cout << "Failed to load font. Error: " << TTF_GetError() << std::endl;
+    }
+
+    if (bold) {
+        TTF_SetFontStyle(font, TTF_STYLE_BOLD);
+    }
+
+    SDL_Color sdlColor = {
+            static_cast<Uint8>(color.r),
+            static_cast<Uint8>(color.g),
+            static_cast<Uint8>(color.b),
+    };
+
+    SDL_Surface* surface = TTF_RenderText_Solid(font, text, sdlColor);
+    if (surface == nullptr) {
+        std::cout << "Failed to create surface. Error: " << TTF_GetError() << std::endl;
+    }
+
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    if (texture == nullptr) {
+        std::cout << "Failed to create texture. Error: " << SDL_GetError() << std::endl;
+    }
+
+    SDL_Rect destRect = {x, y, surface->w, surface->h};
+    SDL_RenderCopy(renderer, texture, nullptr, &destRect);
+
+    SDL_FreeSurface(surface);
+    SDL_DestroyTexture(texture);
+    TTF_CloseFont(font);
+}
+
 
 void RenderWindow::display() {
     SDL_RenderPresent(renderer);

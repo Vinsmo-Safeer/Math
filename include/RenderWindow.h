@@ -6,6 +6,7 @@
 #include <iostream>
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 
 #include "Color.h"
 
@@ -31,6 +32,8 @@ public:
     void drawCircle(float x, float y, float r, Color color);
     void drawCircle(float x, float y, float r, int thickness, Color color);
     void fillCircle(float x, float y, float r, Color color);
+
+    void drawText(const char* text, int x, int y, int size, bool bold, Color color);
 
     void display();
 

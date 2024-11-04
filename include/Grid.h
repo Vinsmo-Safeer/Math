@@ -5,6 +5,8 @@
 
 #include <iostream>
 #include <SDL.h>
+#include <vector>
+#include <cmath>
 
 #include "RenderWindow.h"
 #include "Color.h"
@@ -27,7 +29,23 @@ private:
     float scale = 50;
 
     Vec2D gridPosition = Vec2D(0, 0);
-    Vec2D lastMousePos = Vec2D(0, 0);
+    std::vector<Vec2D> lastMousePos = std::vector<Vec2D>(5);
+
+    bool drawNumbers = false;
+
+    bool gridMoving = false;
+
+
+    Uint32 lastClickTime = 0;
+    bool leftButtonPressed = false;
+
+    bool clickedOnce = false;
+
+    int doubleClickDelay = 0;
+
+    bool singleClick = false;
+    bool doubleClick = false;
+
 
 public:
     Grid(RenderWindow& p_window, Matrix& matrix);

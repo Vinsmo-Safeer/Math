@@ -7,6 +7,8 @@ class Vec2D {
 public:
     float x, y;
 
+    Vec2D() : x(0), y(0) {}
+
     Vec2D(float p_x, float p_y) : x(p_x), y(p_y) {}
 
     Vec2D operator+(const Vec2D& other) {
@@ -25,6 +27,10 @@ public:
         x += other.x;
         y += other.y;
         return *this;
+    }
+    // for Vec2D == Vec2D
+    bool operator==(const Vec2D& other) {
+        return x == other.x && y == other.y;
     }
 
 
