@@ -40,6 +40,13 @@ add_executable(Math src/main.cpp
         include/MouseHandler.h
         src/inputs/MouseHandler.cpp
         include/Utils.h
+        src/PopUpMenu.cpp
+        include/PopUpMenu.h
+        include/UI.h
+        src/UI.cpp
+        include/button.h
+        include/KeyboardHandler.h
+        src/inputs/KeyboardHandler.cpp
 )
 
 # Link all the libraries

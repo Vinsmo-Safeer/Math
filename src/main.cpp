@@ -8,6 +8,7 @@
 #include "RenderWindow.h"
 #include "Grid.h"
 #include "Utils.h"
+#include "UI.h"
 
 int FPS = 60;
 
@@ -61,6 +62,7 @@ int main(int argc, char* argv[]) {
             }
 
             handleMouseInput(event);
+            handleKeyInput(event);
         }
 
         // Fixed timestep logic
