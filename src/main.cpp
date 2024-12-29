@@ -9,6 +9,8 @@
 #include "Grid.h"
 #include "Utils.h"
 #include "UI.h"
+#include "Panel.h"
+#include "DataProxy.h"
 
 int FPS = 60;
 
@@ -28,10 +30,15 @@ int main(int argc, char* argv[]) {
 
     RenderWindow window("Math v1.0", 800, 600);
 
+    DataProxy dataProxy;
+
     Vec2D iHat(1, 0);
     Vec2D jHat(0, 1);
     Matrix matrix(iHat, jHat);
-    Grid grid(window, matrix);
+    Grid grid(window, matrix, dataProxy);
+
+    Panel panel(window, dataProxy);
+
 
     bool showGrid = true;
 
@@ -61,6 +68,15 @@ int main(int argc, char* argv[]) {
                 running = false;
             }
 
+            // Check for maximize and restore events
+            if (event.type == SDL_WINDOWEVENT) {
+                if (event.window.event == SDL_WINDOWEVENT_MAXIMIZED) {
+                    panel.reload();
+                } else if (event.window.event == SDL_WINDOWEVENT_RESTORED) {
+                    panel.reload();
+                }
+            }
+
             handleMouseInput(event);
             handleKeyInput(event);
         }
@@ -70,6 +86,7 @@ int main(int argc, char* argv[]) {
             try {
                 // Update game logic here
                 grid.update();
+                panel.update();
 
             } catch (const std::exception& e) {
                 std::cerr << e.what() << std::endl;
@@ -86,6 +103,7 @@ int main(int argc, char* argv[]) {
         // Render the game
         if (showGrid) {
             grid.drawGrid();
+            panel.draw();
         }
 
         window.display();

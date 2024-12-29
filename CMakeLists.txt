@@ -47,6 +47,11 @@ add_executable(Math src/main.cpp
         include/button.h
         include/KeyboardHandler.h
         src/inputs/KeyboardHandler.cpp
+        include/Panel.h
+        src/Panel.cpp
+        include/DataProxy.h
+        src/DataProxy.cpp
+        include/Rect.h
 )
 
 # Link all the libraries

@@ -24,6 +24,9 @@ public:
     void cleanUp();
     void clear();
 
+    int getWidth();
+    int getHeight();
+
     void drawLine(float x1, float y1, float x2, float y2, Color color);
     void drawLine(float x1, float y1, float x2, float y2, int thickness, Color color);
     void drawRect(float x, float y, float w, float h, Color color);

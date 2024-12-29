@@ -18,13 +18,19 @@
 #include "MouseHandler.h"
 #include "KeyboardHandler.h"
 #include "PopUpMenu.h"
+#include "DataProxy.h"
+#include "Rect.h"
 
 class Grid {
 private:
 
+    Rect GridRect;
+
     RenderWindow& window;
 
     Matrix& matrix;
+
+    DataProxy& dataProxy;
 
     std::unique_ptr<PopUpMenu> popUpMenu; // Pointer to manage the popup menu dynamically
 
@@ -43,6 +49,10 @@ private:
     bool gridMoving = false;
 
     bool leftButtonPressed = false;
+    bool rightButtonPressed = false;
+    bool middleButtonPressed = false;
+    bool lShiftPressed = false;
+    bool lAltPressed = false;
 
     bool isRightDrag = false;
 
@@ -57,8 +67,19 @@ private:
 
     std::vector<Vec2D> selectedVectors;
 
+    Vec2D toBeConnected;
+
+     bool canCreateVector = false;
+
+     SDL_Cursor* openHandCursor = SDL_CreateColorCursor(IMG_Load("../assets/cursors/open_hand.png"), 16, 16);
+
+    bool moveVectors;
+    std::vector<Vec2D> vectorsToMove;
+    std::vector<Vec2D> initialToMoveVectorsPos;
+    Vec2D initialToMoveVectorPos;
+
 public:
-    Grid(RenderWindow& p_window, Matrix& matrix);
+    Grid(RenderWindow& p_window, Matrix& p_matrix, DataProxy& p_dataProxy);
     void update();
     void drawGrid();
 

@@ -42,18 +42,68 @@ public:
         std::cout << "Vector added at " << vector.x << ", " << vector.y << std::endl;
     }
 
-    void addConnectedVector(Vec2D vector1, Vec2D vector2) {
-        // check if the vectors are already connected
-        for (int i = 0; i < connectedVectors.size(); i++) {
-            if (connectedVectors[i][0] == vector1 && connectedVectors[i][1] == vector2
-                || connectedVectors[i][0] == vector2 && connectedVectors[i][1] == vector1) {
+    void removeVector(Vec2D vector) {
+        std::cout << "Attempting to remove vector: (" << vector.x << ", " << vector.y << ")" << std::endl;
+
+        // Check and remove the vector itself
+        for (size_t i = 0; i < vectors.size(); i++) {
+            std::cout << "Checking vector at index " << i << ": ("
+                      << vectors[i].x << ", " << vectors[i].y << ")" << std::endl;
+            if (vectors[i] == vector) {
+                std::cout << "Vector match found at index " << i << ". Removing it." << std::endl;
+                vectors.erase(vectors.begin() + i);
+                std::cout << "Vector removed successfully." << std::endl;
+
+                // Check and remove any connected vectors
+                for (size_t i = 0; i < connectedVectors.size(); i++) {
+                    const auto& connection = connectedVectors[i];
+                    std::cout << "Checking connected vector pair at index " << i << ": [("
+                              << connection[0].x << ", " << connection[0].y << "), ("
+                              << connection[1].x << ", " << connection[1].y << ")]" << std::endl;
+
+                    if (connection[0] == vector || connection[1] == vector) {
+                        std::cout << "Connected vector pair involving (" << vector.x << ", " << vector.y
+                                  << ") found at index " << i << ". Removing it." << std::endl;
+                        connectedVectors.erase(connectedVectors.begin() + i);
+                        std::cout << "Connected vector pair removed successfully." << std::endl;
+                        i--; // Adjust index after removal
+                    }
+                }
+
                 return;
             }
         }
-        std::vector<Vec2D> connectedVector;
-        connectedVector.push_back(vector1);
-        connectedVector.push_back(vector2);
-        connectedVectors.push_back(connectedVector);
+        std::cout << "Vector not found in 'vectors'." << std::endl;
+
+
+    }
+
+
+
+    void addConnectedVector(Vec2D vector1, Vec2D vector2) {
+        if (isConnected(vector1, vector2)) {
+            return; // Connection already exists
+        }
+        connectedVectors.push_back({vector1, vector2});
+        std::cout << "Connected vector added at "
+                  << vector1.x << ", " << vector1.y << " and "
+                  << vector2.x << ", " << vector2.y << std::endl;
+    }
+
+
+    bool isConnected(const Vec2D& vector1, const Vec2D& vector2) {
+        for (const auto& connection : connectedVectors) {
+            if ((connection[0] == vector1 && connection[1] == vector2) ||
+                (connection[0] == vector2 && connection[1] == vector1)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    std::vector<std::vector<Vec2D>> getConnectedVectors() {
+        return connectedVectors;
     }
 
     Vec2D& getVector(float x, float y) {
@@ -67,6 +117,45 @@ public:
 
     std::vector<Vec2D> getVectors() {
         return vectors;
+    }
+
+    void moveVector(Vec2D vector, float x, float y) {
+        // change the x and y of the vector in vectors
+        for (int i = 0; i < vectors.size(); i++) {
+            if (vectors[i] == vector) {
+                vectors[i].x = x;
+                vectors[i].y = y;
+            }
+        }
+        // change the x and y of the vector in connectedVectors
+        for (int i = 0; i < connectedVectors.size(); i++) {
+            if (connectedVectors[i][0] == vector) {
+                connectedVectors[i][0].x = x;
+                connectedVectors[i][0].y = y;
+            }
+            if (connectedVectors[i][1] == vector) {
+                connectedVectors[i][1].x = x;
+                connectedVectors[i][1].y = y;
+            }
+        }
+    }
+
+    void moveVector(Vec2D vector, Vec2D newVector) {
+        // change the x and y of the vector in vectors
+        for (int i = 0; i < vectors.size(); i++) {
+            if (vectors[i] == vector) {
+                vectors[i] = newVector;
+            }
+        }
+        // change the x and y of the vector in connectedVectors
+        for (int i = 0; i < connectedVectors.size(); i++) {
+            if (connectedVectors[i][0] == vector) {
+                connectedVectors[i][0] = newVector;
+            }
+            if (connectedVectors[i][1] == vector) {
+                connectedVectors[i][1] = newVector;
+            }
+        }
     }
 
     // void addVector(Vec3D vector) {

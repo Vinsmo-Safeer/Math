@@ -29,8 +29,13 @@ public:
         return *this;
     }
     // for Vec2D == Vec2D
-    bool operator==(const Vec2D& other) {
-        return x == other.x && y == other.y;
+    bool operator==(const Vec2D& other) const {
+        const float EPSILON = 1e-6; // Adjust based on precision needed
+        return std::fabs(x - other.x) < EPSILON && std::fabs(y - other.y) < EPSILON;
+    }
+    // for Vec2D != Vec2D
+    bool operator!=(const Vec2D& other) const {
+        return !(*this == other);
     }
 
 

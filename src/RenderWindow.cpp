@@ -2,14 +2,25 @@
 #include "RenderWindow.h"
 
 RenderWindow::RenderWindow(const char* p_title, int p_w, int p_h)
-    : window(nullptr), renderer(nullptr) {
-    window = SDL_CreateWindow(p_title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, p_w, p_h, SDL_WINDOW_SHOWN);
+        : window(nullptr), renderer(nullptr) {
+    window = SDL_CreateWindow(
+            p_title,
+            SDL_WINDOWPOS_UNDEFINED,
+            SDL_WINDOWPOS_UNDEFINED,
+            p_w,
+            p_h,
+            SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
+    );
     if (window == nullptr) {
         std::cout << "Window failed to init. Error: " << SDL_GetError() << std::endl;
     }
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    if (renderer == nullptr) {
+        std::cout << "Renderer failed to init. Error: " << SDL_GetError() << std::endl;
+    }
 }
+
 
 void RenderWindow::cleanUp() {
     SDL_DestroyWindow(window);
@@ -18,6 +29,18 @@ void RenderWindow::cleanUp() {
 void RenderWindow::clear() {
     SDL_SetRenderDrawColor(renderer, defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a);
     SDL_RenderClear(renderer);
+}
+
+int RenderWindow::getWidth() {
+    int w, h;
+    SDL_GetWindowSize(window, &w, &h);
+    return w;
+}
+
+int RenderWindow::getHeight() {
+    int w, h;
+    SDL_GetWindowSize(window, &w, &h);
+    return h;
 }
 
 

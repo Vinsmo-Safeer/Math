@@ -98,6 +98,20 @@ build CMakeFiles/Math.dir/src/inputs/KeyboardHandler.cpp.obj: CXX_COMPILER__Math
   OBJECT_DIR = CMakeFiles\Math.dir
   OBJECT_FILE_DIR = CMakeFiles\Math.dir\src\inputs
 
+build CMakeFiles/Math.dir/src/Panel.cpp.obj: CXX_COMPILER__Math_unscanned_Debug C$:/Users/lenovo/OneDrive/Desktop/project/Math/src/Panel.cpp || cmake_object_order_depends_target_Math
+  DEP_FILE = CMakeFiles\Math.dir\src\Panel.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/lenovo/OneDrive/Desktop/project/Libs/c++/SDL2/include -IC:/Users/lenovo/OneDrive/Desktop/project/Libs/c++/SDL2_image/include -IC:/Users/lenovo/OneDrive/Desktop/project/Libs/c++/SDL2_ttf/include -IC:/Users/lenovo/OneDrive/Desktop/project/Math/include
+  OBJECT_DIR = CMakeFiles\Math.dir
+  OBJECT_FILE_DIR = CMakeFiles\Math.dir\src
+
+build CMakeFiles/Math.dir/src/DataProxy.cpp.obj: CXX_COMPILER__Math_unscanned_Debug C$:/Users/lenovo/OneDrive/Desktop/project/Math/src/DataProxy.cpp || cmake_object_order_depends_target_Math
+  DEP_FILE = CMakeFiles\Math.dir\src\DataProxy.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/lenovo/OneDrive/Desktop/project/Libs/c++/SDL2/include -IC:/Users/lenovo/OneDrive/Desktop/project/Libs/c++/SDL2_image/include -IC:/Users/lenovo/OneDrive/Desktop/project/Libs/c++/SDL2_ttf/include -IC:/Users/lenovo/OneDrive/Desktop/project/Math/include
+  OBJECT_DIR = CMakeFiles\Math.dir
+  OBJECT_FILE_DIR = CMakeFiles\Math.dir\src
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target Math
@@ -106,7 +120,7 @@ build CMakeFiles/Math.dir/src/inputs/KeyboardHandler.cpp.obj: CXX_COMPILER__Math
 #############################################
 # Link the executable Math.exe
 
-build Math.exe: CXX_EXECUTABLE_LINKER__Math_Debug CMakeFiles/Math.dir/src/main.cpp.obj CMakeFiles/Math.dir/src/RenderWindow.cpp.obj CMakeFiles/Math.dir/src/Grid.cpp.obj CMakeFiles/Math.dir/src/inputs/MouseHandler.cpp.obj CMakeFiles/Math.dir/src/PopUpMenu.cpp.obj CMakeFiles/Math.dir/src/UI.cpp.obj CMakeFiles/Math.dir/src/inputs/KeyboardHandler.cpp.obj
+build Math.exe: CXX_EXECUTABLE_LINKER__Math_Debug CMakeFiles/Math.dir/src/main.cpp.obj CMakeFiles/Math.dir/src/RenderWindow.cpp.obj CMakeFiles/Math.dir/src/Grid.cpp.obj CMakeFiles/Math.dir/src/inputs/MouseHandler.cpp.obj CMakeFiles/Math.dir/src/PopUpMenu.cpp.obj CMakeFiles/Math.dir/src/UI.cpp.obj CMakeFiles/Math.dir/src/inputs/KeyboardHandler.cpp.obj CMakeFiles/Math.dir/src/Panel.cpp.obj CMakeFiles/Math.dir/src/DataProxy.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lSDL2main  -lSDL2  -lSDL2_image  -lSDL2_ttf  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   LINK_PATH = -LC:/Users/lenovo/OneDrive/Desktop/project/Libs/c++/SDL2/lib/x64   -LC:/Users/lenovo/OneDrive/Desktop/project/Libs/c++/SDL2_image/lib/x64   -LC:/Users/lenovo/OneDrive/Desktop/project/Libs/c++/SDL2_ttf/lib/x64
