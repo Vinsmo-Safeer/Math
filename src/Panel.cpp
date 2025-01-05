@@ -11,6 +11,9 @@ Panel::Panel(RenderWindow& p_window, DataProxy &p_dataProxy) : window(p_window),
 
 void Panel::setPanelWidth(int width) {
     wholeWidth = width;
+    wholePanelRect.x = window.getWidth() - wholeWidth;
+    wholePanelRect.w = wholeWidth;
+    wholePanelRect.h = window.getHeight();
     panelWidth = wholeWidth - barWidth;
     dataProxy.panelWidth = wholeWidth;
     buttonHandler();
@@ -33,11 +36,19 @@ void Panel::buttonHandler() {
     // Delete button
     DeleteButton = Rect(buttonX + 10, 10, buttonWidth, buttonHeight);
     DeleteButton.clickable = false;
+    ConnectButton.toggled = false;
+
+    // Connect button
+    ConnectButton = Rect(buttonX + 10, 40, buttonWidth, buttonHeight);
+    ConnectButton.clickable = true;
+    ConnectButton.toggled = false;
 }
 
 void Panel::update() {
     int x, y;
     get_mouse_position(x, y);
+
+
 
     // check if the mouse is on the bar, the bar's wholeWidth is 10 pixels
     if (x >= window.getWidth() - wholeWidth && x <= window.getWidth() - wholeWidth + barWidth) {
@@ -45,7 +56,7 @@ void Panel::update() {
         if (is_mouse_button_pressed(SDL_BUTTON_LEFT)) {
             draggingBar = true;
         }
-    } else {
+    } else if (wholePanelRect.contains(x, y)) {
         // if the mouse is not on the bar, change the cursor to the default cursor
         SDL_SetCursor(SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW));
     }
@@ -53,6 +64,7 @@ void Panel::update() {
     if (draggingBar) {
         wholeWidth = window.getWidth() - x;
         panelWidth = wholeWidth - barWidth;
+        dataProxy.panelWidth = wholeWidth;
         buttonHandler();
     }
 
@@ -61,6 +73,7 @@ void Panel::update() {
     }
 
     handleEvents();
+
 
 }
 
@@ -77,8 +90,17 @@ void Panel::handleEvents() {
     get_mouse_position(x, y);
     if (DeleteButton.contains(x, y) && DeleteButton.clickable) {
         SDL_SetCursor(SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND));
-        if (is_mouse_button_pressed(SDL_BUTTON_LEFT)) {
-            dataProxy.addDeleteVectors(dataProxy.getSelectedVectors());
+        if (dataProxy.leftButtonReleased) {
+            dataProxy.setDeleteVectors(dataProxy.getSelectedVectors());
+        }
+    }
+
+    // check if the mouse is on the connect button
+    if (ConnectButton.contains(x, y) && ConnectButton.clickable) {
+        SDL_SetCursor(SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND));
+        if (dataProxy.leftButtonReleased) {
+            ConnectButton.toggled = !ConnectButton.toggled;
+            dataProxy.connectVectors = ConnectButton.toggled;
         }
     }
 }
@@ -107,6 +129,15 @@ void Panel::draw() {
         window.drawText("Delete vectors", DeleteButton.x + 5, DeleteButton.y + 3, 15, true, Color(0, 0, 0, 255));
     } else {
         window.drawText("Delete vectors", DeleteButton.x + 5, DeleteButton.y + 3, 15, true, Color(150, 150, 150, 255));
+    }
+    // Connect button
+    if (ConnectButton.toggled) {
+        // orange bg, white text
+        window.fillRect(ConnectButton.x, ConnectButton.y, ConnectButton.w, ConnectButton.h, Color(255, 165, 0, 255));
+        window.drawText("Connect vectors", ConnectButton.x + 5, ConnectButton.y + 3, 15, true, Color(255, 255, 255, 255));
+    }else {
+        window.fillRect(ConnectButton.x, ConnectButton.y, ConnectButton.w, ConnectButton.h, Color(255, 255, 255, 255));
+        window.drawText("Connect vectors", ConnectButton.x + 5, ConnectButton.y + 3, 15, true, Color(0, 0, 0, 255));
     }
 
 }

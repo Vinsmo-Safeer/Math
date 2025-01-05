@@ -11,6 +11,9 @@ bool is_mouse_button_pressed(Uint8 button);
 // Function to check if a specific mouse button is released
 bool is_mouse_button_released(Uint8 button);
 
+// Function to check if a specific mouse button is released
+bool was_mouse_button_released(Uint8 button);
+
 // Function to get the current mouse position
 void get_mouse_position(int &x, int &y);
 

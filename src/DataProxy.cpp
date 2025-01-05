@@ -5,21 +5,17 @@ DataProxy::DataProxy() {
     selectedVectors = std::vector<Vec2D>();
 }
 
-void DataProxy::addDeleteVector(Vec2D vector) {
-    deleteVectors.push_back(vector);
+void DataProxy::setDeleteVector(Vec2D vector) {
+    deleteVectors = {vector};
 }
-void DataProxy::addDeleteVectors(std::vector<Vec2D> vectors) {
-    for (int i = 0; i < vectors.size(); i++) {
-        deleteVectors.push_back(vectors[i]);
-    }
+void DataProxy::setDeleteVectors(std::vector<Vec2D> vectors) {
+    deleteVectors.assign(vectors.begin(), vectors.end());
 }
 
 void DataProxy::removeDeleteVector(Vec2D vector) {
-    for (int i = 0; i < deleteVectors.size(); i++) {
-        if (deleteVectors[i] == vector) {
-            deleteVectors.erase(deleteVectors.begin() + i);
-            break;
-        }
+    auto it = std::find(deleteVectors.begin(), deleteVectors.end(), vector);
+    if (it != deleteVectors.end()) {
+        deleteVectors.erase(it);
     }
 }
 
@@ -31,21 +27,17 @@ void DataProxy::clearDeleteVectors() {
     deleteVectors.clear();
 }
 
-void DataProxy::addSelectedVector(Vec2D vector) {
-    selectedVectors.push_back(vector);
+void DataProxy::setSelectedVector(Vec2D vector) {
+    selectedVectors = {vector};
 }
-void DataProxy::addSelectedVectors(std::vector<Vec2D> vectors) {
-    for (int i = 0; i < vectors.size(); i++) {
-        selectedVectors.push_back(vectors[i]);
-    }
+void DataProxy::setSelectedVectors(std::vector<Vec2D> vectors) {
+    selectedVectors.assign(vectors.begin(), vectors.end());
 }
 
 void DataProxy::removeSelectedVector(Vec2D vector) {
-    for (int i = 0; i < selectedVectors.size(); i++) {
-        if (selectedVectors[i] == vector) {
-            selectedVectors.erase(selectedVectors.begin() + i);
-            break;
-        }
+    auto it = std::find(selectedVectors.begin(), selectedVectors.end(), vector);
+    if (it != selectedVectors.end()) {
+        selectedVectors.erase(it);
     }
 }
 
@@ -60,4 +52,5 @@ void DataProxy::clearSelectedVectors() {
 void DataProxy::clearAll() {
     deleteVectors.clear();
     selectedVectors.clear();
+    std::cout << "All vectors cleared." << std::endl;
 }

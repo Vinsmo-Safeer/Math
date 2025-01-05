@@ -41,6 +41,11 @@ public:
         vectors.push_back(vector);
         std::cout << "Vector added at " << vector.x << ", " << vector.y << std::endl;
     }
+    void addVectors(std::vector<Vec2D> vectors) {
+        for (int i = 0; i < vectors.size(); i++) {
+            addVector(vectors[i]);
+        }
+    }
 
     void removeVector(Vec2D vector) {
         std::cout << "Attempting to remove vector: (" << vector.x << ", " << vector.y << ")" << std::endl;
@@ -74,8 +79,12 @@ public:
             }
         }
         std::cout << "Vector not found in 'vectors'." << std::endl;
-
-
+    }
+    void removeVectors(std::vector<Vec2D> vectors) {
+        std::cout << "Attempting to remove " << vectors.size() << " vectors." << std::endl;
+        for (int i = 0; i < vectors.size(); i++) {
+            removeVector(vectors[i]);
+        }
     }
 
 
@@ -100,6 +109,32 @@ public:
         }
         return false;
     }
+
+    void removeConnectedVector(Vec2D vector1, Vec2D vector2) {
+        for (size_t i = 0; i < connectedVectors.size(); i++) {
+            const auto& connection = connectedVectors[i];
+            if ((connection[0] == vector1 && connection[1] == vector2) ||
+                (connection[0] == vector2 && connection[1] == vector1)) {
+                connectedVectors.erase(connectedVectors.begin() + i);
+                return;
+            }
+        }
+    }
+    void removeConnectedVector(Vec2D vector) {
+        // Iterate over connectedVectors and remove connections involving the given vector
+        for (size_t i = 0; i < connectedVectors.size(); /* no increment here */) {
+            const auto& connection = connectedVectors[i];
+            // Check if the vector is part of the current connection
+            if (connection[0] == vector || connection[1] == vector) {
+                // Remove the connection
+                connectedVectors.erase(connectedVectors.begin() + i);
+            } else {
+                // Move to the next connection only if no deletion occurred
+                i++;
+            }
+        }
+    }
+
 
 
     std::vector<std::vector<Vec2D>> getConnectedVectors() {

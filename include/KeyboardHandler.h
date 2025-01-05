@@ -12,6 +12,9 @@ void handleKeyInput(SDL_Event &event);
 // Function to check if a specific key is pressed
 bool is_key_pressed(SDL_Keycode key);
 
+// Function to check if a specific key was just released
+bool was_key_released(SDL_Keycode key);
+
 
 
 

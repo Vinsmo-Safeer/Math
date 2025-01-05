@@ -20,7 +20,10 @@ private:
 
     bool draggingBar = false;
 
+    Rect wholePanelRect = Rect(0, 0, 0, 0);
+
     Rect DeleteButton = Rect(0, 0, 0, 0);
+    Rect ConnectButton = Rect(0, 0, 0, 0);
 
 public:
     Panel(RenderWindow& p_window, DataProxy& p_dataProxy);

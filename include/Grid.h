@@ -42,6 +42,36 @@ private:
     float scale = 50;
 
     Vec2D gridPosition = Vec2D(0, 0);
+
+    int t_mouseX, t_mouseY;
+
+    bool t_leftButtonPressed = false;
+    bool t_middleButtonPressed = false;
+    bool t_rightButtonPressed = false;
+
+    bool t_leftButtonWasReleased = false;
+    bool t_middleButtonWasReleased = false;
+    bool t_rightButtonWasReleased = false;
+
+
+    // Manage Dragging
+    bool t_isDraggingLeft = false;
+    bool t_isDraggingRight = false;
+    Vec2D t_initialRightClickPos;
+    Vec2D t_initialLeftClickPos;
+
+    // Handle Vector Interactions
+    bool t_VectorHoverFound = false;
+    std::vector<Vec2D> t_toConnectVectors;
+    bool t_movingVector = false;
+    std::vector<Vec2D> t_vectorsToMove;
+    std::vector<std::vector<Vec2D>> t_connectedVectorsToMove;
+    std::vector<std::vector<Vec2D>> t_movingConnections;
+    std::vector<Vec2D> t_initialToMoveVectorsPos;
+    Vec2D t_lastMousePos;
+
+
+
     std::vector<Vec2D> lastMousePos = std::vector<Vec2D>(5);
 
     bool drawNumbers = false;
@@ -90,6 +120,30 @@ public:
     void createPopUpWindow();
 
     void reset();
+
+    void receiveDataProxy();
+    void updateCursor();
+    void handleMouseInputs();
+    void manageDragging();
+    void handleVectorInteractions();
+
+    bool isVectorSelected(Vec2D vector) {
+        for (int i = 0; i < selectedVectors.size(); i++) {
+            if (selectedVectors[i] == vector) {
+                return true;
+            }
+        }
+        return false;
+    }
+    bool removeVectorSelection(Vec2D vector) {
+        for (int i = 0; i < selectedVectors.size(); i++) {
+            if (selectedVectors[i] == vector) {
+                selectedVectors.erase(selectedVectors.begin() + i);
+                return true;
+            }
+        }
+        return false;
+    }
 };
 
 #endif //MATH_GRID_H

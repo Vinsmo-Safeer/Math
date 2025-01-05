@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include "Vec2D.h"
 
 class DataProxy {
@@ -15,16 +16,20 @@ public:
 
     int panelWidth = 0;
 
+    bool connectVectors = false;
+
+    bool leftButtonReleased = false;
+
     DataProxy();
-    void addDeleteVector(Vec2D vector);
-    void addDeleteVectors(std::vector<Vec2D> vectors);
+    void setDeleteVector(Vec2D vector);
+    void setDeleteVectors(std::vector<Vec2D> vectors);
     void removeDeleteVector(Vec2D vector);
     void removeDeleteVectors(std::vector<Vec2D> vectors);
     std::vector<Vec2D> getDeleteVectors();
     void clearDeleteVectors();
 
-    void addSelectedVector(Vec2D vector);
-    void addSelectedVectors(std::vector<Vec2D> vectors);
+    void setSelectedVector(Vec2D vector);
+    void setSelectedVectors(std::vector<Vec2D> vectors);
     void removeSelectedVector(Vec2D vector);
     void removeSelectedVectors(std::vector<Vec2D> vectors);
     std::vector<Vec2D> getSelectedVectors();
