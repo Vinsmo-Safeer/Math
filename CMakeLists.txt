@@ -42,16 +42,19 @@ add_executable(Math src/main.cpp
         include/Utils.h
         src/PopUpMenu.cpp
         include/PopUpMenu.h
-        include/UI.h
-        src/UI.cpp
-        include/button.h
+        include/PanelButtons.h
         include/KeyboardHandler.h
         src/inputs/KeyboardHandler.cpp
         include/Panel.h
-        src/Panel.cpp
+        src/panel/Panel.cpp
         include/DataProxy.h
         src/DataProxy.cpp
         include/Rect.h
+        src/panel/DeleteVectorButton.cpp
+        include/DeleteVectorButton.h
+        include/FontUtils.h
+        include/ConnectVectorButton.h
+        src/panel/ConnectVectorButton.cpp
 )
 
 # Link all the libraries

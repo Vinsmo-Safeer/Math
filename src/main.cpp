@@ -8,7 +8,6 @@
 #include "RenderWindow.h"
 #include "Grid.h"
 #include "Utils.h"
-#include "UI.h"
 #include "Panel.h"
 #include "DataProxy.h"
 

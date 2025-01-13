@@ -1,12 +1,22 @@
 #include "Panel.h"
 
-Panel::Panel(RenderWindow& p_window, DataProxy &p_dataProxy) : window(p_window), dataProxy(p_dataProxy) {
+Panel::Panel(RenderWindow& p_window, DataProxy &p_dataProxy) :
+window(p_window), dataProxy(p_dataProxy),
+
+deleteButton(p_dataProxy, p_window),
+connectButton(p_dataProxy, p_window)
+{
     std::cout << "Panel created." << std::endl;
     int w, h;
     SDL_GetWindowSize(window.getWindow(), &w, &h);
     std::cout << "Window size: " << w << "x" << h << std::endl;
 
+
+    buttons.push_back(&deleteButton);
+    buttons.push_back(&connectButton);
+
     setPanelWidth(w * 0.2);
+
 }
 
 void Panel::setPanelWidth(int width) {
@@ -33,15 +43,9 @@ void Panel::buttonHandler() {
     int buttonWidth = panelWidth - 20;
     int buttonX = window.getWidth() - wholeWidth + 10;
 
-    // Delete button
-    DeleteButton = Rect(buttonX + 10, 10, buttonWidth, buttonHeight);
-    DeleteButton.clickable = false;
-    ConnectButton.toggled = false;
-
-    // Connect button
-    ConnectButton = Rect(buttonX + 10, 40, buttonWidth, buttonHeight);
-    ConnectButton.clickable = true;
-    ConnectButton.toggled = false;
+    for (int i = 0; i < buttons.size(); i++) {
+        buttons[i]->buttonRect = Rect(buttonX + 10, 10 + (30 * i), buttonWidth, buttonHeight);
+    }
 }
 
 void Panel::update() {
@@ -79,29 +83,13 @@ void Panel::update() {
 
 
 void Panel::handleEvents() {
-    // check if any vectors are selected
-    if (dataProxy.getSelectedVectors().size() > 0) {
-        DeleteButton.clickable = true;
-    } else {
-        DeleteButton.clickable = false;
-    }
-    // check if the mouse is on the delete button
+
     int x, y;
     get_mouse_position(x, y);
-    if (DeleteButton.contains(x, y) && DeleteButton.clickable) {
-        SDL_SetCursor(SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND));
-        if (dataProxy.leftButtonReleased) {
-            dataProxy.setDeleteVectors(dataProxy.getSelectedVectors());
-        }
-    }
 
-    // check if the mouse is on the connect button
-    if (ConnectButton.contains(x, y) && ConnectButton.clickable) {
-        SDL_SetCursor(SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND));
-        if (dataProxy.leftButtonReleased) {
-            ConnectButton.toggled = !ConnectButton.toggled;
-            dataProxy.connectVectors = ConnectButton.toggled;
-        }
+
+    for (int i = 0; i < buttons.size(); i++) {
+        buttons[i]->update(x, y);
     }
 }
 
@@ -122,22 +110,8 @@ void Panel::draw() {
     SDL_SetRenderDrawColor(window.getRenderer(), 255, 255, 255, 255);
     window.fillRect(window.getWidth() - wholeWidth + (barWidth / 2), (window.getHeight() / 2) - 13, 1, 25, Color(255, 255, 255, 255));
 
-    // Draw buttons
-    // Delete button
-    window.fillRect(DeleteButton.x, DeleteButton.y, DeleteButton.w, DeleteButton.h, Color(255, 255, 255, 255));
-    if (DeleteButton.clickable) {
-        window.drawText("Delete vectors", DeleteButton.x + 5, DeleteButton.y + 3, 15, true, Color(0, 0, 0, 255));
-    } else {
-        window.drawText("Delete vectors", DeleteButton.x + 5, DeleteButton.y + 3, 15, true, Color(150, 150, 150, 255));
-    }
-    // Connect button
-    if (ConnectButton.toggled) {
-        // orange bg, white text
-        window.fillRect(ConnectButton.x, ConnectButton.y, ConnectButton.w, ConnectButton.h, Color(255, 165, 0, 255));
-        window.drawText("Connect vectors", ConnectButton.x + 5, ConnectButton.y + 3, 15, true, Color(255, 255, 255, 255));
-    }else {
-        window.fillRect(ConnectButton.x, ConnectButton.y, ConnectButton.w, ConnectButton.h, Color(255, 255, 255, 255));
-        window.drawText("Connect vectors", ConnectButton.x + 5, ConnectButton.y + 3, 15, true, Color(0, 0, 0, 255));
+    for (int i = 0; i < buttons.size(); i++) {
+        buttons[i]->draw();
     }
 
 }

@@ -126,6 +126,9 @@ public:
     void handleMouseInputs();
     void manageDragging();
     void handleVectorInteractions();
+    void handleVectorMovement();
+    void handleVectorSelection(bool &t_VectorHoverFound, Vec2D &hoveredVector);
+    void handleVectorConnection(bool &t_VectorHoverFound, Vec2D &hoveredVector);
 
     bool isVectorSelected(Vec2D vector) {
         for (int i = 0; i < selectedVectors.size(); i++) {

@@ -55,7 +55,7 @@ void Grid::handleMouseInputs() {
 void Grid::manageDragging() {
     // Check if mouse is within the grid area
     if (GridRect.contains(t_mouseX, t_mouseY)) {
-        // Handle right mouse button dragging
+        // Handle right mouse PanelButtons dragging
         if (t_rightButtonPressed) {
             if (!t_isDraggingRight) {  // Start dragging
                 t_initialRightClickPos = Vec2D(t_mouseX, t_mouseY);
@@ -75,10 +75,10 @@ void Grid::manageDragging() {
                 }
             }
         } else {
-            t_isDraggingRight = false;  // Stop dragging when the button is released
+            t_isDraggingRight = false;  // Stop dragging when the PanelButtons is released
         }
 
-        // Handle left mouse button dragging
+        // Handle left mouse PanelButtons dragging
         if (t_leftButtonPressed) {
             if (!t_isDraggingLeft) {  // Start dragging
                 t_initialLeftClickPos = Vec2D(t_mouseX, t_mouseY);
@@ -94,10 +94,139 @@ void Grid::manageDragging() {
                 }
             }
         } else {
-            t_isDraggingLeft = false;  // Stop dragging when the button is released
+            t_isDraggingLeft = false;  // Stop dragging when the PanelButtons is released
         }
     }
 }
+
+void Grid::handleVectorConnection(bool &t_VectorHoverFound, Vec2D &hoveredVector) {
+    // Connect Vectors
+    //----------------
+    if (dataProxy.connectVectors) {
+        t_toConnectVectors = selectedVectors;
+        if (t_leftButtonWasReleased) {
+            if (!is_key_pressed(SDLK_LSHIFT) && t_VectorHoverFound) {
+                // connect all the vectors to the hovered vector
+                for (int i = 0; i < t_toConnectVectors.size(); i++) {
+                    matrix.addConnectedVector(t_toConnectVectors[i], hoveredVector);
+                }
+                selectedVectors.clear();
+                selectedVectors = {hoveredVector};
+            }
+        }
+
+    }
+}
+
+void Grid::handleVectorSelection(bool &t_VectorHoverFound, Vec2D &hoveredVector) {
+
+    // Check for selection and deselection of vectors
+    //----------------------------------------------
+    if (t_leftButtonWasReleased) {
+        if (!is_key_pressed(SDLK_LSHIFT)) {
+            selectedVectors.clear();
+        }
+
+        if (t_VectorHoverFound) {
+
+            if (isVectorSelected(hoveredVector)) {
+                removeVectorSelection(hoveredVector);
+            } else {
+                selectedVectors.push_back(hoveredVector);
+            }
+        }
+    }
+}
+
+void Grid::handleVectorMovement() {
+    // Moving Vectors
+    //---------------
+    // check if it clicked 'G'
+    if (!t_movingVector && selectedVectors.size() > 0 && was_key_released(SDLK_g)) {
+        t_movingVector = true;
+        t_vectorsToMove = selectedVectors;
+        t_connectedVectorsToMove.clear();
+        t_movingConnections.clear();
+        // for all the vectors to move, check all the connected vectors
+        std::vector<std::vector<Vec2D>> connectedVectors = matrix.getConnectedVectors();
+        for (int i = 0; i < t_vectorsToMove.size(); i++) {
+            std::vector<Vec2D> connectedVectorsToMove;
+            for (int j = 0; j < connectedVectors.size(); j++) {
+                if (connectedVectors[j][0] == t_vectorsToMove[i]) {
+                    connectedVectorsToMove.push_back(connectedVectors[j][1]);
+                }
+                if (connectedVectors[j][1] == t_vectorsToMove[i]) {
+                    connectedVectorsToMove.push_back(connectedVectors[j][0]);
+                }
+            }
+            t_connectedVectorsToMove.push_back(connectedVectorsToMove);
+        }
+        // check if the vectors to move are connected to each other, store them in a separate vector
+        for (int i = 0; i < t_vectorsToMove.size(); i++) {
+            for (int j = 0; j < t_vectorsToMove.size(); j++) {
+                if (i != j) {
+                    for (int k = 0; k < t_connectedVectorsToMove[i].size(); k++) {
+                        if (t_connectedVectorsToMove[i][k] == t_vectorsToMove[j]) {
+                            t_movingConnections.push_back({t_vectorsToMove[i], t_vectorsToMove[j]});
+                            t_connectedVectorsToMove[i].erase(t_connectedVectorsToMove[i].begin() + k);
+                        }
+                    }
+                }
+            }
+        }
+        // remove the connection between the vectors to move
+        for (int i = 0; i < t_vectorsToMove.size(); i++) {
+            matrix.removeConnectedVector(t_vectorsToMove[i]);
+        }
+        t_initialToMoveVectorsPos = selectedVectors;
+        matrix.removeVectors(selectedVectors);
+        selectedVectors.clear();
+        t_lastMousePos = Vec2D(t_mouseX, t_mouseY);
+    }
+    if (t_movingVector) {
+        // get velocity of the mouse according to the grid
+        float velocityX = (t_mouseX - t_lastMousePos.x) / scale;
+        float velocityY = (t_lastMousePos.y - t_mouseY) / scale;
+
+
+        // move the vectors
+        for (int i = 0; i < t_vectorsToMove.size(); i++) {
+            t_vectorsToMove[i] += Vec2D(velocityX, velocityY);
+        }
+
+        // move the connections
+        for (int i = 0; i < t_movingConnections.size(); i++) {
+            t_movingConnections[i][0] += Vec2D(velocityX, velocityY);
+            t_movingConnections[i][1] += Vec2D(velocityX, velocityY);
+        }
+
+
+        t_lastMousePos = Vec2D(t_mouseX, t_mouseY);
+    }
+
+    if (t_movingVector && t_leftButtonWasReleased) {
+        // Place the selected vectors in their positions
+        for (int i = 0; i < t_vectorsToMove.size(); i++) {
+            // Connect vectors, and connect moving vectors that are supposed to be connected
+            for (int j = 0; j < t_connectedVectorsToMove[i].size(); j++) {
+                matrix.addConnectedVector(t_vectorsToMove[i], t_connectedVectorsToMove[i][j]);
+            }
+            for (int j = 0; j < t_movingConnections.size(); j++) {
+                matrix.addConnectedVector(t_movingConnections[j][0], t_movingConnections[j][1]);
+            }
+            matrix.addVector(t_vectorsToMove[i]);
+        }
+
+        t_movingVector = false;
+    }
+
+    if (t_movingVector && t_rightButtonWasReleased) {
+        // Place the selected vectors in their initial position
+        t_movingVector = false;
+    }
+
+}
+
 
 void Grid::handleVectorInteractions() {
 
@@ -122,127 +251,11 @@ void Grid::handleVectorInteractions() {
             }
         }
 
-        // Connect Vectors
-        //----------------
-        if (dataProxy.connectVectors) {
-            t_toConnectVectors = selectedVectors;
-            if (t_leftButtonWasReleased) {
-                if (!is_key_pressed(SDLK_LSHIFT) && t_VectorHoverFound) {
-                    // connect all the vectors to the hovered vector
-                    for (int i = 0; i < t_toConnectVectors.size(); i++) {
-                        matrix.addConnectedVector(t_toConnectVectors[i], hoveredVector);
-                    }
-                    selectedVectors.clear();
-                    selectedVectors = {hoveredVector};
-                }
-            }
+        handleVectorConnection(t_VectorHoverFound, hoveredVector);
 
-        }
+        handleVectorSelection(t_VectorHoverFound, hoveredVector);
 
-        // Check for selection and deselection of vectors
-        //----------------------------------------------
-        if (t_leftButtonWasReleased) {
-            if (!is_key_pressed(SDLK_LSHIFT)) {
-                selectedVectors.clear();
-            }
-
-            if (t_VectorHoverFound) {
-
-                if (isVectorSelected(hoveredVector)) {
-                    removeVectorSelection(hoveredVector);
-                } else {
-                    selectedVectors.push_back(hoveredVector);
-                }
-            }
-        }
-
-
-
-        // Moving Vectors
-        //---------------
-        // check if it clicked 'G'
-        if (!t_movingVector && selectedVectors.size() > 0 && was_key_released(SDLK_g)) {
-            t_movingVector = true;
-            t_vectorsToMove = selectedVectors;
-            t_connectedVectorsToMove.clear();
-            t_movingConnections.clear();
-            // for all the vectors to move, check all the connected vectors
-            std::vector<std::vector<Vec2D>> connectedVectors = matrix.getConnectedVectors();
-            for (int i = 0; i < t_vectorsToMove.size(); i++) {
-                std::vector<Vec2D> connectedVectorsToMove;
-                for (int j = 0; j < connectedVectors.size(); j++) {
-                    if (connectedVectors[j][0] == t_vectorsToMove[i]) {
-                        connectedVectorsToMove.push_back(connectedVectors[j][1]);
-                    }
-                    if (connectedVectors[j][1] == t_vectorsToMove[i]) {
-                        connectedVectorsToMove.push_back(connectedVectors[j][0]);
-                    }
-                }
-                t_connectedVectorsToMove.push_back(connectedVectorsToMove);
-            }
-            // check if the vectors to move are connected to each other, store them in a separate vector
-            for (int i = 0; i < t_vectorsToMove.size(); i++) {
-                for (int j = 0; j < t_vectorsToMove.size(); j++) {
-                    if (i != j) {
-                        for (int k = 0; k < t_connectedVectorsToMove[i].size(); k++) {
-                            if (t_connectedVectorsToMove[i][k] == t_vectorsToMove[j]) {
-                                t_movingConnections.push_back({t_vectorsToMove[i], t_vectorsToMove[j]});
-                                t_connectedVectorsToMove[i].erase(t_connectedVectorsToMove[i].begin() + k);
-                            }
-                        }
-                    }
-                }
-            }
-            // remove the connection between the vectors to move
-            for (int i = 0; i < t_vectorsToMove.size(); i++) {
-                matrix.removeConnectedVector(t_vectorsToMove[i]);
-            }
-            t_initialToMoveVectorsPos = selectedVectors;
-            matrix.removeVectors(selectedVectors);
-            selectedVectors.clear();
-            t_lastMousePos = Vec2D(t_mouseX, t_mouseY);
-        }
-        if (t_movingVector) {
-            // get velocity of the mouse according to the grid
-            float velocityX = (t_mouseX - t_lastMousePos.x) / scale;
-            float velocityY = (t_lastMousePos.y - t_mouseY) / scale;
-
-
-            // move the vectors
-            for (int i = 0; i < t_vectorsToMove.size(); i++) {
-                t_vectorsToMove[i] += Vec2D(velocityX, velocityY);
-            }
-
-            // move the connections
-            for (int i = 0; i < t_movingConnections.size(); i++) {
-                t_movingConnections[i][0] += Vec2D(velocityX, velocityY);
-                t_movingConnections[i][1] += Vec2D(velocityX, velocityY);
-            }
-
-
-            t_lastMousePos = Vec2D(t_mouseX, t_mouseY);
-        }
-
-        if (t_movingVector && t_leftButtonWasReleased) {
-            // Place the selected vectors in their positions
-            for (int i = 0; i < t_vectorsToMove.size(); i++) {
-                // Connect vectors, and connect moving vectors that are supposed to be connected
-                for (int j = 0; j < t_connectedVectorsToMove[i].size(); j++) {
-                    matrix.addConnectedVector(t_vectorsToMove[i], t_connectedVectorsToMove[i][j]);
-                }
-                for (int j = 0; j < t_movingConnections.size(); j++) {
-                    matrix.addConnectedVector(t_movingConnections[j][0], t_movingConnections[j][1]);
-                }
-                matrix.addVector(t_vectorsToMove[i]);
-            }
-
-            t_movingVector = false;
-        }
-
-        if (t_movingVector && t_rightButtonWasReleased) {
-            // Place the selected vectors in their initial position
-            t_movingVector = false;
-        }
+        handleVectorMovement();
 
 
 
@@ -267,10 +280,10 @@ void Grid::update() {
    handleMouseInputs();
 
    if (t_leftButtonWasReleased) {
-       std::cout << "Left button was released\n";
+       std::cout << "Left PanelButtons was released\n";
    }
    if (was_mouse_button_released(SDL_BUTTON_LEFT)) {
-       std::cout << "Left button was released\n";
+       std::cout << "Left PanelButtons was released\n";
    }
 
    manageDragging();
@@ -469,7 +482,7 @@ void Grid::drawGrid() {
 
 
 
-    // if the connectVectors is true, then draw the lines between selected vectors and the mouse
+    // if the vectorConnections is true, then draw the lines between selected vectors and the mouse
     if (dataProxy.connectVectors) {
         for (auto &connectVec : t_toConnectVectors) {
             Vec2D pos;

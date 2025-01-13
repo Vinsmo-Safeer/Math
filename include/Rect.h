@@ -6,8 +6,6 @@
 class Rect {
 public:
     float x, y, w, h;
-    bool clickable = false;
-    bool toggled = false;
 
     Rect() : x(0), y(0), w(0), h(0) {}
 

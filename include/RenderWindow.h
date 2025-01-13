@@ -7,8 +7,10 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include <map>
 
 #include "Color.h"
+#include "FontUtils.h"
 
 class RenderWindow {
 private:
@@ -17,9 +19,23 @@ private:
 
     Color defaultColor = Color::White();
 
+    std::map<int, TTF_Font*> fontCache;
+
+    TTF_Font* getFont(int size) {
+        if (fontCache.find(size) == fontCache.end()) {
+            TTF_Font* newFont = TTF_OpenFont("../assets/fonts/arial.ttf", size);
+            if (newFont == nullptr) {
+                std::cout << "Failed to load font. Error: " << TTF_GetError() << std::endl;
+                return nullptr;
+            }
+            fontCache[size] = newFont;
+        }
+        return fontCache[size];
+    }
 
 public:
     RenderWindow(const char* p_title, int p_w, int p_h);
+    ~RenderWindow();
     float getRefreshRate();
     void cleanUp();
     void clear();
@@ -39,6 +55,8 @@ public:
     void drawText(const char* text, int x, int y, int size, bool bold, Color color);
 
     void display();
+
+    int measureTextWidth(const char* text, int fontSize);
 
 
     SDL_Window* getWindow() { return window; }

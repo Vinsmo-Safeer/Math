@@ -6,6 +6,9 @@
 #include "MouseHandler.h"
 #include "DataProxy.h"
 #include "Rect.h"
+#include "PanelButtons.h"
+#include "DeleteVectorButton.h"
+#include "ConnectVectorButton.h"
 
 class Panel {
 
@@ -22,8 +25,10 @@ private:
 
     Rect wholePanelRect = Rect(0, 0, 0, 0);
 
-    Rect DeleteButton = Rect(0, 0, 0, 0);
-    Rect ConnectButton = Rect(0, 0, 0, 0);
+    std::vector<PanelButtons*> buttons;
+    DeleteVectorButton deleteButton;
+    ConnectVectorButton connectButton;
+
 
 public:
     Panel(RenderWindow& p_window, DataProxy& p_dataProxy);

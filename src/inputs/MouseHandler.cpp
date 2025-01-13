@@ -3,7 +3,7 @@
 #include <map>
 #include "MouseHandler.h"
 
-// Track mouse button states and release events
+// Track mouse PanelButtons states and release events
 static std::map<Uint8, bool> mouse_button_state;
 static std::map<Uint8, bool> mouse_button_released;
 static int mouse_x = 0;
@@ -37,7 +37,7 @@ bool is_mouse_button_pressed(Uint8 button) {
 }
 
 bool was_mouse_button_released(Uint8 button) {
-    // Check if the button was released, and reset the release state
+    // Check if the PanelButtons was released, and reset the release state
     if (mouse_button_released[button]) {
         mouse_button_released[button] = false; // Reset after detecting
         return true;

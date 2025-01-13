@@ -5,13 +5,13 @@
 
 void handleMouseInput(SDL_Event& event);
 
-// Function to check if a specific mouse button is pressed
+// Function to check if a specific mouse PanelButtons is pressed
 bool is_mouse_button_pressed(Uint8 button);
 
-// Function to check if a specific mouse button is released
+// Function to check if a specific mouse PanelButtons is released
 bool is_mouse_button_released(Uint8 button);
 
-// Function to check if a specific mouse button is released
+// Function to check if a specific mouse PanelButtons is released
 bool was_mouse_button_released(Uint8 button);
 
 // Function to get the current mouse position

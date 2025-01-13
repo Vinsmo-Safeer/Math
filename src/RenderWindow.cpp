@@ -20,6 +20,13 @@ RenderWindow::RenderWindow(const char* p_title, int p_w, int p_h)
         std::cout << "Renderer failed to init. Error: " << SDL_GetError() << std::endl;
     }
 }
+RenderWindow::~RenderWindow() {
+    for (auto& pair : fontCache) {
+        TTF_CloseFont(pair.second);
+    }
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+}
 
 
 void RenderWindow::cleanUp() {
@@ -133,11 +140,9 @@ void RenderWindow::fillCircle(float x, float y, float r, Color color) {
     SDL_SetRenderDrawColor(renderer, defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a);
 }
 
-void RenderWindow::drawText(const char *text, int x, int y, int size, bool bold, Color color) {
-    TTF_Font* font = TTF_OpenFont("../assets/fonts/arial.ttf", size);
-    if (font == nullptr) {
-        std::cout << "Failed to load font. Error: " << TTF_GetError() << std::endl;
-    }
+void RenderWindow::drawText(const char* text, int x, int y, int size, bool bold, Color color) {
+    TTF_Font* font = getFont(size);
+    if (!font) return;
 
     if (bold) {
         TTF_SetFontStyle(font, TTF_STYLE_BOLD);
@@ -152,11 +157,14 @@ void RenderWindow::drawText(const char *text, int x, int y, int size, bool bold,
     SDL_Surface* surface = TTF_RenderText_Solid(font, text, sdlColor);
     if (surface == nullptr) {
         std::cout << "Failed to create surface. Error: " << TTF_GetError() << std::endl;
+        return;
     }
 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
     if (texture == nullptr) {
         std::cout << "Failed to create texture. Error: " << SDL_GetError() << std::endl;
+        SDL_FreeSurface(surface);
+        return;
     }
 
     SDL_Rect destRect = {x, y, surface->w, surface->h};
@@ -164,7 +172,6 @@ void RenderWindow::drawText(const char *text, int x, int y, int size, bool bold,
 
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(texture);
-    TTF_CloseFont(font);
 }
 
 
@@ -180,3 +187,15 @@ float RenderWindow::getRefreshRate() {
     }
     return refreshRate;
 }
+
+int RenderWindow::measureTextWidth(const char* text, int fontSize) {
+    TTF_Font* font = getFont(fontSize);
+    if (font == nullptr) {
+        std::cout << "Font not loaded!" << std::endl;
+        return 0;
+    }
+
+    return FontUtils::measureTextWidth(text, fontSize, font);
+}
+
+
